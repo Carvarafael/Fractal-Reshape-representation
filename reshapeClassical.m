@@ -5,10 +5,8 @@
 %%Guilherme Freire Roberto
 
 
-function reshapeClassical(file, samples)
+function reshapeClassical(destino,Actualdir,features, samples)
 
-readFile = file;
-features = readFile(369:368+samples,1:300);
 features = cell2mat(features);
 featuresSplit = zeros(samples,100,3);
 featuresSplit(:,:,1) = features(:, 1:100);
@@ -27,7 +25,9 @@ for n = 1:samples
 IMG = reshape(newFeatures(n, :, :),[10, 10, 3]);
 
 IMG = uint8(IMG);
+cd(destino)
 imwrite(IMG, strcat('F-Classical ', num2str(n), '.png'));
+cd(Actualdir)
 end
 
 end

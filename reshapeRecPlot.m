@@ -6,10 +6,9 @@
 %%requer o arquivo cerecurr_y.m
 %%Guilherme Freire Roberto
 
-function reshapeRecPlot(file, samples)
+function reshapeRecPlot(destino,Actualdir,features, samples)
 
-readFile = file;
-features = readFile(369:368+samples,1:300);
+
 features = cell2mat(features);
 featuresSplit = zeros(samples,100,3);
 featuresSplit(:,:,1) = features(:, 1:100);
@@ -38,7 +37,9 @@ IMG = zeros(size(r_channel, 1), size(r_channel, 2), 3);
 IMG(:, :, 1) = r_channel;
 IMG(:, :, 2) = g_channel;
 IMG(:, :, 3) = b_channel;
+cd(destino)
 imwrite(IMG, strcat('F-RecPlot ', num2str(n), '.png'));
+cd(Actualdir)
 end
 
 

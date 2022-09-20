@@ -1,7 +1,9 @@
+function ScriptLACDF3Distances(diretorio_org,destino)
 %%Extração de atributos DF LAC 
 %%com uso das métricas de distância Chessboard, Euclidiana e Manhatan a partir de imagens RGB.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%Guilherme Freire Roberto
+%%Editado por: Rafael Carvalho 10/09/2022
 
 %Base LA: uma imagem da class4 foi removida. Corrigir os folds
 
@@ -10,16 +12,20 @@ maxr = 41;
 
 %%
 %Classe 1
-diretorio_org='C:\Users\thais\Documents\Doutorado\Bases de imagens\LiverGender\1'; %imagens
-destino='C:\Users\thais\Documents\Doutorado\Bases de imagens\LiverGender\1'; %local onde será salvo o arquivo .mat
-for n=1:150 %número de imagens da classe
-    tic
-originais=strcat('Class 1 - (',num2str(n),').png');
-fullname=fullfile(diretorio_org,originais);
+%diretorio_org='C:\Users\thais\Documents\Doutorado\Bases de imagens\LiverGender\1'; %imagens
+%destino='C:\Users\thais\Documents\Doutorado\Bases de imagens\LiverGender\1'; %local onde será salvo o arquivo .mat
+
+Imagens = dir([diretorio_org '/*.png']);
+Tipo = split(diretorio_org,'\');
+disp(strcat('Coletando características Fractais das Imagens - ',Tipo{end}))
+tic
+for n=1:length(Imagens)
+originais=Imagens(n).name;
+fullname=fullfile(Imagens(n).folder,originais);
 PIC=imread(fullname);
 
 
-
+disp(strcat('Calculando características fractais - Minkowski(',num2str(n),'/',num2str(length(Imagens)),')'))
 %Minkowski LAC DF
 MatrizProb = pmr(PIC, maxr);
 MinkLAC = lacunaridade(MatrizProb);
@@ -37,6 +43,7 @@ Y = y.';
 mdl = fitlm(X, Y, 'RobustOpts', 'on');
 MinkDF = mdl.Coefficients.Estimate(2);
 
+disp(strcat('Calculando características fractais - Euclidian(',num2str(n),'/',num2str(length(Imagens)),')'))
 %Euclidian LAC DF
 MatrizProb = pmrEucl(PIC, maxr);
 EuclLAC = lacunaridade(MatrizProb);
@@ -54,6 +61,7 @@ Y = y.';
 mdl = fitlm(X, Y, 'RobustOpts', 'on');
 EuclDF = mdl.Coefficients.Estimate(2);
 
+disp(strcat('Calculando características fractais - Manhattan(',num2str(n),'/',num2str(length(Imagens)),')'))
 %Manhattan LAC DF
 MatrizProb = pmrManh(PIC, maxr);
 ManhLAC = lacunaridade(MatrizProb);
@@ -76,5 +84,6 @@ clear PIC;
 final=strcat(num2str(n),'.mat');
 filename=fullfile(destino,final);
 save(filename);
+end
 toc
 end
