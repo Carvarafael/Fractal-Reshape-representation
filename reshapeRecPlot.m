@@ -9,7 +9,7 @@
 function reshapeRecPlot(destino,Actualdir,features, samples)
 
 
-features = cell2mat(features);
+%features = cell2mat(features);
 featuresSplit = zeros(samples,100,3);
 featuresSplit(:,:,1) = features(:, 1:100);
 featuresSplit(:,:,2) = features(:, 101:200);

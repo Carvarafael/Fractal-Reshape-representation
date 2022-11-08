@@ -1,11 +1,11 @@
-function [TrainFolds, TestFolds] = Create10Folds(datastore, FORMAT)
+function [TrainFolds, TestFolds] = Create10Folds(datastore, FORMAT,subfolders)
 
 TrainFolds = cell(1,10);
 TestFolds = cell(1,10);
 
 
 folds = 10;
-imds = imageDatastore(datastore, 'IncludeSubfolders',true, 'LabelSource','foldernames');
+imds = imageDatastore(datastore, 'IncludeSubfolders',subfolders, 'LabelSource','foldernames');
 [imd1 imd2 imd3 imd4 imd5 imd6 imd7 imd8 imd9 imd10] = splitEachLabel(imds,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1, 'randomize');
 
 partStores{1} = imd1.Files ;
