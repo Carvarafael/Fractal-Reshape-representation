@@ -6,8 +6,8 @@ from numpy import genfromtxt
 
 
 # Parameters
-file_path = 'D:\dev\Mestrado\Onlydata-features-1.csv'
-savepathssm = 'D:\\TCC\\ImagemTeste\\Imagens_n_Segmentadas\\leve\\Fractal\\SSM\\'
+file_path = 'D:\dev\Mestrado\Onlydata-features-3.csv'
+savepathssm = 'D:\\TCC\\ImagemTeste\\Imagens_n_Segmentadas\\moderado\\Fractal\\SSM\\'
 
 
 #Make save dir if not exists
