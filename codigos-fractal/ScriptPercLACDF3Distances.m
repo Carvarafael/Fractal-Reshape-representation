@@ -20,11 +20,14 @@ for n=1:length(Imagens)
 originais=Imagens(n).name;
 fullname=fullfile(Imagens(n).folder,originais);
 PIC=imread(fullname);
+PIC = imresize(PIC,[224,224],'bilinear');
+
 disp(strcat('Calculando características fractais - Percolação(',num2str(n),'/',num2str(length(Imagens)),')'))
 %PERC
 [MinkMaxClusterIndex, MinkMaxPercIndex, MinkMaxMaxClusterIndex, MinkAreaRatioMaxCluster, MinkMaxMaxCluster, MinkSkewnessMaxCluster, MinkAreaMaxCluster, MinkAreaRatioCluster, MinkAreaRatioPerc, MinkMaxCluster, MinkMaxPerc, MinkSkewnessCluster, MinkSkewnessPerc, MinkAreaPerc, MinkAreaCluster, Minkp, Minkg, Minkh] = clustperc(PIC,maxr);
 [EuclMaxClusterIndex, EuclMaxPercIndex, EuclMaxMaxClusterIndex, EuclAreaRatioMaxCluster, EuclMaxMaxCluster, EuclSkewnessMaxCluster, EuclAreaMaxCluster, EuclAreaRatioCluster, EuclAreaRatioPerc, EuclMaxCluster, EuclMaxPerc, EuclSkewnessCluster, EuclSkewnessPerc, EuclAreaPerc, EuclAreaCluster, Euclp, Euclg, Euclh] = clustpercEucl(PIC,maxr);
 [ManhMaxClusterIndex, ManhMaxPercIndex, ManhMaxMaxClusterIndex, ManhAreaRatioMaxCluster, ManhMaxMaxCluster, ManhSkewnessMaxCluster, ManhAreaMaxCluster, ManhAreaRatioCluster, ManhAreaRatioPerc, ManhMaxCluster, ManhMaxPerc, ManhSkewnessCluster, ManhSkewnessPerc, ManhAreaPerc, ManhAreaCluster, Manhp, Manhg, Manhh] = clustpercManh(PIC,maxr);
+
 
 disp(strcat('Calculando características fractais - Minkowski(',num2str(n),'/',num2str(length(Imagens)),')'))
 %Minkowski LAC DF
@@ -77,6 +80,8 @@ X = x.';
 Y = y.';
 mdl = fitlm(X, Y, 'RobustOpts', 'on');
 ManhDF = mdl.Coefficients.Estimate(2);
+
+
 
 clear PIC;
 %clear AC

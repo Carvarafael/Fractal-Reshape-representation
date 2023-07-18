@@ -1,4 +1,4 @@
-function [predicted, classProbs, file_txt] = Weka_Classification(Actualdir,Imagedir,OrigTrainFolds, OrigTestFolds,TipoClass,features,folds)
+function [predicted_final, classProbs_final, file_final] = Weka_Classification(Actualdir,Imagedir,OrigTrainFolds, OrigTestFolds,TipoClass,features,folds)
 
 %Get 10fold features to weka classification
 VTrain = {};
@@ -55,7 +55,8 @@ i = wekaPathCheck();
 
 
 %caminho para salvar os arquivos com resultado da classificação dos folds
-
+predicted_final = {};
+classProbs_final = {};
 for i = 1:folds
     num = num2str(i);
     %Nome do arquivo a ser carregado
@@ -68,8 +69,11 @@ for i = 1:folds
     nb = trainWekaClassifier(train,TipoClass);
     %testa o classificador
     [predicted,classProbs] = wekaClassify(test,nb);
+    predicted_final{1,i} = predicted;
+    classProbs_final{1,i} = classProbs;
     % calcula a curva ROC
     file_txt = rocWeka(filename1,filename2,TipoClass);
+    file_final{1,i} = file_txt;
     %salva arquivo no caminho especificado para cada fold
     
 end

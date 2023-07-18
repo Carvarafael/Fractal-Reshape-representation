@@ -22,12 +22,14 @@ from numpy import genfromtxt
 from pathlib import Path, PureWindowsPath
 import os
 import numpy as np
+import glob
 
 
 # Parameters
-file_path = 'D:\dev\Mestrado\Onlydata-features-4.csv'
-savepathgasf = 'D:\\TCC\\ImagemTeste\\Imagens_n_Segmentadas\\grave\\Fractal\\GASF\\'
-savepathgadf = 'D:\\TCC\\ImagemTeste\\Imagens_n_Segmentadas\\grave\\Fractal\\GADF\\'
+
+file_path = 'D:\dev\Mestrado\Onlydata-features-2.csv'
+savepathgasf = 'D:\\Downloads\\ftmp4cvtmb-1\\Doente\\Fractal\\GASF\\'
+savepathgadf = 'D:\\Downloads\\ftmp4cvtmb-1\\Doente\\Fractal\\GADF\\'
 
 #Make save dir if not exists
 if not os.path.exists(savepathgasf):
@@ -35,10 +37,12 @@ if not os.path.exists(savepathgasf):
 if not os.path.exists(savepathgadf):
     os.makedirs(savepathgadf)
 
-n_img = 74
+
+
 
 # Get data from csv
 X = genfromtxt(file_path, delimiter=',')
+n_img = len(X)
 #Define data range
 a = X[0:n_img, 0:300]
 
@@ -68,4 +72,5 @@ for i in range (n_img):
   imagem = np.reshape(X_gadf, (100, 100,3))
   imagem = (255*(imagem - np.min(imagem))/np.ptp(imagem)).astype(int)
   imagem = np.uint8(imagem)
-  plt.imsave(savepathgadf+'GASF'+str(i+1)+'.png', imagem, origin='lower')
+  plt.imsave(savepathgadf+'GADF'+str(i+1)+'.png', imagem, origin='lower')
+  print('imagens salvas no diretorios')

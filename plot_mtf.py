@@ -26,8 +26,8 @@ import matplotlib.pyplot as plt
 from pyts.image import MarkovTransitionField
 
 # Parameters
-file_path = 'D:\dev\Mestrado\Onlydata-features-4.csv'
-savepathMTF = 'D:\\TCC\\ImagemTeste\\Imagens_n_Segmentadas\\grave\\Fractal\\MTF\\'
+file_path = 'D:\dev\Mestrado\Onlydata-features-1.csv'
+savepathMTF = 'D:\\Downloads\\ftmp4cvtmb-1\\Normal\\Fractal\\MTF\\'
 
 #Make save dir if not exists
 if not os.path.exists(savepathMTF):
@@ -35,10 +35,9 @@ if not os.path.exists(savepathMTF):
 if not os.path.exists(savepathMTF):
     os.makedirs(savepathMTF)
 
-n_img = 74
-
 # Get data from csv
 X = genfromtxt(file_path, delimiter=',')
+n_img = len(X)
 #Define data range
 a = X[0:n_img, 0:300]
 

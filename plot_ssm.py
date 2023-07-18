@@ -6,8 +6,8 @@ from numpy import genfromtxt
 
 
 # Parameters
-file_path = 'D:\dev\Mestrado\Onlydata-features-3.csv'
-savepathssm = 'D:\\TCC\\ImagemTeste\\Imagens_n_Segmentadas\\moderado\\Fractal\\SSM\\'
+file_path = 'D:\dev\Mestrado\Onlydata-features-2.csv'
+savepathssm = 'D:\\Downloads\\ftmp4cvtmb-1\\Doente\\Fractal\\SSM\\'
 
 
 #Make save dir if not exists
@@ -15,10 +15,9 @@ if not os.path.exists(savepathssm):
     os.makedirs(savepathssm)
 
 
-n_img = 74
-
 # Get data from csv
 csv_feat = genfromtxt(file_path, delimiter=',')
+n_img = len(csv_feat)
 #Define data range
 csv_feat = csv_feat[0:n_img, 0:300]
 
