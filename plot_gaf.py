@@ -17,7 +17,6 @@ It is implemented as :class:`pyts.image.GramianAngularField`.
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import ImageGrid
 from pyts.image import GramianAngularField
-from pyts.datasets import load_gunpoint
 from numpy import genfromtxt
 from pathlib import Path, PureWindowsPath
 import os
@@ -27,17 +26,15 @@ import glob
 
 # Parameters
 
-file_path = 'D:\dev\Mestrado\Onlydata-features-2.csv'
-savepathgasf = 'D:\\Downloads\\ftmp4cvtmb-1\\Doente\\Fractal\\GASF\\'
-savepathgadf = 'D:\\Downloads\\ftmp4cvtmb-1\\Doente\\Fractal\\GADF\\'
+file_path = 'D:\dev\Mestrado\Onlydata-features-3.csv'
+savepathgasf = 'D:\\TCC\\ImagemTeste\\Normalizadas\\ROIs_normalizadas\\moderado\\Método proposto\\moderado\\GASF\\'
+savepathgadf = 'D:\\TCC\\ImagemTeste\\Normalizadas\\ROIs_normalizadas\\moderado\\Método proposto\\moderado\\GADF\\'
 
 #Make save dir if not exists
 if not os.path.exists(savepathgasf):
     os.makedirs(savepathgasf)
 if not os.path.exists(savepathgadf):
     os.makedirs(savepathgadf)
-
-
 
 
 # Get data from csv

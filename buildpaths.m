@@ -1,21 +1,32 @@
-function [Paths] = buildpaths(Folds,recdir,classdir,gasfdir,gadfdir,MTFdir,SSMfdir)
+function [Paths] = buildpaths(Folds,oridir,recdir,classdir,gasfdir,gadfdir,MTFdir,SSMfdir)
 
-for j=1:length(Folds)
-%     for i=1:length(Folds{1, 1})
-%         Paths{1,j}{1,i} = split(Folds{1, j}{1, i}.Files,'\');
-%         Paths{1,j}{1,i} = split(Paths{1,j}{1,i}(:,5),".");
-%         Paths{1,j}{1,i} = Paths{1,j}{1,i}(:,1);
-%         Paths{1,j}{1,i}= regexp(Paths{1,j}{1,i}(:,1), '[0-9]*', 'match');
 for j=1:length(Folds)
     for i=1:length(Folds{1, 1})
         Paths{1,j}{1,i} = split(Folds{1, j}{1, i}.Files,'\');
         Paths{1,j}{1,i} = split(Paths{1,j}{1,i}(:,6),".");
         Paths{1,j}{1,i} = Paths{1,j}{1,i}(:,1);
         Paths{1,j}{1,i}= regexp(Paths{1,j}{1,i}(:,1), '[0-9]*', 'match');
+% for j=1:length(Folds)
+%     for i=1:length(Folds{1, 1})
+%         Paths{1,j}{1,i} = split(Folds{1, j}{1, i}.Files,'\');
+%         Paths{1,j}{1,i} = split(Paths{1,j}{1,i}(:,9),".");
+%         Paths{1,j}{1,i} = Paths{1,j}{1,i}(:,1);
+%         Paths{1,j}{1,i}= regexp(Paths{1,j}{1,i}(:,1), '[0-9]*', 'match');
         
         for k=1:length(Folds{1, j}{1, i}.Files)
             Paths{1,j}{1,i}{k,2} = char(Folds{1,j}{1,i}.Labels(k));
-            Paths{1,j}{1,i}{k,3} = Folds{1,j}{1,i}.Files{k,1};
+            
+            switch char(Folds{1,j}{1,i}.Labels(k))
+                case "normal"
+                    Paths{1,j}{1,i}{k,3} = char(strcat(oridir{j},"\","N",Paths{1,j}{1,i}{k,1},".png"));
+                case "leve"
+                    Paths{1,j}{1,i}{k,3} = char(strcat(oridir{j},"\","L",Paths{1,j}{1,i}{k,1},".png"));
+                case "moderado"
+                    Paths{1,j}{1,i}{k,3} = char(strcat(oridir{j},"\","M",Paths{1,j}{1,i}{k,1},".png"));
+                case "grave"
+                    Paths{1,j}{1,i}{k,3} = char(strcat(oridir{j},"\","G",Paths{1,j}{1,i}{k,1},".png"));
+            end
+%             Paths{1,j}{1,i}{k,3} = Folds{1,j}{1,i}.Files{k,1};
             Paths{1,j}{1,i}{k,4} = char(strcat(recdir{j},"\","F-RecPlot",Paths{1,j}{1,i}{k,1},".png"));
             Paths{1,j}{1,i}{k,5} = char(strcat(classdir{j},"\","F-Classical",Paths{1,j}{1,i}{k,1},".png"));
             Paths{1,j}{1,i}{k,6} = char(strcat(gasfdir{j},"\","GRAYGASFEucl",Paths{1,j}{1,i}{k,1},".png"));

@@ -27,7 +27,7 @@ from pyts.image import MarkovTransitionField
 
 # Parameters
 file_path = 'D:\dev\Mestrado\Onlydata-features-1.csv'
-savepathMTF = 'D:\\Downloads\\ftmp4cvtmb-1\\Normal\\Fractal\\MTF\\'
+savepathMTF = 'D:\\TCC\\ImagemTeste\\Normalizadas\\ROIs_normalizadas\\normal\\Método proposto\\normal\\MTF\\teste'
 
 #Make save dir if not exists
 if not os.path.exists(savepathMTF):

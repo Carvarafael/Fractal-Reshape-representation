@@ -1,11 +1,11 @@
-function [origFeatures,YPred,probs, vLossOrig, time_training,flattingLayer1,flattingLayerTrain] = SingleCNN10folds(Train_dataset,Test_dataset, Neural,numClasses, ENVIRONMENT, ME,folds)
+function [origFeatures,YPred,probs, vLossOrig, time_training,flattingLayer1,flattingLayerTrain] = SingleCNN10folds(Train_dataset,Test_dataset, Neural,numClasses, ENVIRONMENT, ME,folds,learningRate)
 
 %Hiper Parâmetros
 MiniBatch = 32;
 ILR = 0.01;
 LRDP = 2;
 LRDF = 0.75;
-L2R = 0.0001;
+L2R = learningRate;
 
 for i=1:folds
     %Ler folds a partir dos arquivos
@@ -37,9 +37,17 @@ for i=1:folds
     trainResizeOrig = augmentedImageDatastore(Neural.Layers(1, 1).InputSize, imdsTrainOrig);%, 'DataAugmentation', imageAugmenter);
     validationResizeOrig = augmentedImageDatastore(Neural.Layers(1, 1).InputSize, imdsValidation);%, 'DataAugmentation', imageAugmenter);
     validationResizeOrig2 = augmentedImageDatastore(Neural.Layers(1, 1).InputSize, imdsValidationOrig);%, 'DataAugmentation', imageAugmenter);
+    
+    
+
 
     %Configuração da CNN
-    optionsOrig = trainingOptions('sgdm', 'MiniBatchSize',MiniBatch, 'MaxEpochs',ME, 'InitialLearnRate',ILR, 'LearnRateSchedule','piecewise', 'LearnRateDropPeriod', LRDP, 'LearnRateDropFactor', LRDF, 'Shuffle','every-epoch', 'ValidationData',validationResizeOrig, 'ValidationFrequency',10,'Verbose',false, 'Plots','training-progress', 'ExecutionEnvironment',ENVIRONMENT, 'L2Regularization', L2R);
+    optionsOrig = trainingOptions(  'sgdm', 'MiniBatchSize',MiniBatch, 'MaxEpochs',20, 'InitialLearnRate',ILR,...
+    'LearnRateSchedule','piecewise', 'LearnRateDropPeriod', LRDP, 'LearnRateDropFactor', LRDF, ...
+'Shuffle','every-epoch', 'ValidationData',validationResizeOrig, 'ValidationFrequency',5,'Verbose'...
+,false, 'Plots','None', 'ExecutionEnvironment',ENVIRONMENT, 'L2Regularization', L2R);
+
+
 
     %Now this is where the fun begins
     tic
@@ -50,43 +58,53 @@ for i=1:folds
         options = trainingOptions('sgdm', 'MiniBatchSize',MiniBatch, 'MaxEpochs',ME, 'InitialLearnRate',ILR, 'LearnRateSchedule','piecewise', 'LearnRateDropPeriod', LRDP, 'LearnRateDropFactor', LRDF, 'Shuffle','every-epoch', 'ValidationData',validationResizeOrig, 'ValidationFrequency',10, 'Verbose',false, 'Plots','training-progress', 'ExecutionEnvironment',ENVIRONMENT, 'L2Regularization', L2R);
         [netOrig, infoResNet50Orig{1,i}] = trainNetwork(trainResizeOrig,Neural,options);
     end
+    
+%     figure
+%     x = 1:50;
+%     y = infoResNet50Orig{1, 5}.ValidationAccuracy;
+%     y2 = infoResNet50Orig{1, 5}.TrainingAccuracy;
+%     xs = x(~isnan(y));
+%     ys = y(~isnan(y));
+%     yi = interp1(xs, ys, x, 'Linear');
+%     plot(x,y2,x,yi)
 
+    
     %Get softmax Layer
-    softmaxLayer = Neural.Layers(end-1).Name;
+     softmaxLayer = 'Softmax';
+   % softmaxLayer = 'fc1000_softmax';
+    
     %flattingLayer = 'efficientnet-b0|model|blocks_0|se|GlobAvgPool';
-    flattingLayer = 'max_pooling2d_1';
-    %flattingLayer2 = 'efficientnet-b0|model|head|global_average_pooling2d|GlobAvgPool';
-    flattingLayer2 = 'avg_pool';
+   %flattingLayer = 'max_pooling2d_1';
+   %  flattingLayer2 = 'efficientnet-b0|model|head|global_average_pooling2d|GlobAvgPool';
+   %flattingLayer2 = 'avg_pool';
     %Obter probabilidades da camada Softmax
     try
         featuresTestSoftmaxOrig = activations(netOrig,validationResizeOrig2,softmaxLayer,'OutputAs','rows');
-        featuresTestflattingLayer = activations(netOrig,validationResizeOrig2,flattingLayer,'OutputAs','rows');
-        featuresTestflattingLayer2 = activations(netOrig,validationResizeOrig2,flattingLayer2,'OutputAs','rows');
-        featuresTrainflattingLayer = activations(netOrig,trainResizeOrig,flattingLayer,'OutputAs','rows');
-        featuresTrainflattingLayer2 = activations(netOrig,trainResizeOrig,flattingLayer2,'OutputAs','rows');
+        %featuresTestflattingLayer = activations(netOrig,validationResizeOrig2,flattingLayer,'OutputAs','rows');
+        %featuresTestflattingLayer2 = activations(netOrig,validationResizeOrig2,flattingLayer2,'OutputAs','rows');
+        %featuresTrainflattingLayer = activations(netOrig,trainResizeOrig,flattingLayer,'OutputAs','rows');
+        %featuresTrainflattingLayer2 = activations(netOrig,trainResizeOrig,flattingLayer2,'OutputAs','rows');
         [YPred,probs] = classify(netOrig,validationResizeOrig2);
     catch
         warning('Problem using GPU. Trying CPU this iteration');
         featuresTestSoftmaxOrig = activations(netOrig,validationResizeOrig2,softmaxLayer,'OutputAs','rows', 'ExecutionEnvironment','cpu');
-        featuresTestflattingLayer = activations(netOrig,validationResizeOrig2,flattingLayer,'OutputAs','rows', 'ExecutionEnvironment','cpu');
-        featuresTestflattingLayer2 = activations(netOrig,validationResizeOrig2,flattingLayer2,'OutputAs','rows', 'ExecutionEnvironment','cpu');
-        featuresTrainflattingLayer = activations(netOrig,trainResizeOrig,flattingLayer,'OutputAs','rows', 'ExecutionEnvironment','cpu');
-        featuresTrainflattingLayer2 = activations(netOrig,trainResizeOrig,flattingLayer2,'OutputAs','rows', 'ExecutionEnvironment','cpu');
+        %featuresTestflattingLayer = activations(netOrig,validationResizeOrig2,flattingLayer,'OutputAs','rows', 'ExecutionEnvironment','cpu');
+        %featuresTestflattingLayer2 = activations(netOrig,validationResizeOrig2,flattingLayer2,'OutputAs','rows', 'ExecutionEnvironment','cpu');
+        %featuresTrainflattingLayer = activations(netOrig,trainResizeOrig,flattingLayer,'OutputAs','rows', 'ExecutionEnvironment','cpu');
+        %featuresTrainflattingLayer2 = activations(netOrig,trainResizeOrig,flattingLayer2,'OutputAs','rows', 'ExecutionEnvironment','cpu');
         
     end
     %ConfusionMatricesOrig{1, i} = confusionmat(confusionTrue, confusionPredOrig);
     origFeatures{1, i} = featuresTestSoftmaxOrig;
-    flattingLayer1{1, i} = featuresTestflattingLayer;
-    flattingLayer1{2, i} = featuresTestflattingLayer2;
-    flattingLayerTrain{1, i} = featuresTrainflattingLayer;
-    flattingLayerTrain{2, i} = featuresTrainflattingLayer2;
+    flattingLayer1{1, i} = {};
+    flattingLayerTrain = {};
+    %flattingLayer1{1, i} = featuresTestflattingLayer;
+    %flattingLayer1{2, i} = featuresTestflattingLayer2;
+    %flattingLayerTrain{1, i} = featuresTrainflattingLayer;
+    %flattingLayerTrain{2, i} = featuresTrainflattingLayer2;
 
     time_training(1,i) = toc;
 end
 %Info{1, 1} = ConfusionMatricesOrig;
 
-vLossOrig = 0;
-
-for i = 1:folds
-    vLossOrig = vLossOrig + infoResNet50Orig{1, i}.ValidationLoss(end);
-end
+vLossOrig = infoResNet50Orig;

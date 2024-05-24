@@ -1,4 +1,4 @@
-function [Resultado] = NewensembleFNN(OrigTest,o_Features,ORIG,rec_Features,REC,class_Features,CLASS,folds)
+function [Resultado] = NewensembleFNN(OrigTest,o_Features,ORIG,rec_Features,REC,MTF_Features,MTF,SSM_Features,SSM,folds)
 %,GASFEucl_Features,GASFEucl,GADF_Features,GADF,MTF_Features,MTF,SSM_Features,SSM,folds)
 %,rec_Features, REC,class_Features,CLASS,GASFEucl_Features, GASFEucl,GASFManh_Features, GASFManh,GASFMink_Features,GASFMink,GADFEucl_Features, GADFEucl,GADFManh_Features, GADFManh,GADFMink_Features,GADFMink)
 accDIS = zeros(1,folds);
@@ -6,7 +6,7 @@ f1DIS = zeros(1,folds);
 Orginal = [];
 
 for j = 1:folds
-    ensembleDIS = (ORIG*o_Features{1,j})+(REC*rec_Features{1,j})+(CLASS*class_Features{1,j});
+    ensembleDIS = (ORIG*o_Features{1,j})+(REC*rec_Features{1,j})+(MTF*MTF_Features{1,j})+(SSM*SSM_Features{1,j});
     ...
         %+(GASFEucl*GASFEucl_Features{1,j}) +(GADF*GADF_Features{1,j})...
         %+(MTF*MTF_Features{1,j})+(SSM*SSM_Features{1,j});
@@ -29,16 +29,16 @@ for j = 1:folds
 %                 Orginal(1, k) = 4;
 %         end
         
-%         switch Categoria
-%             case 'grave'
-%                  Orginal(1, k) = 1;
-%             case 'leve'
-%                  Orginal(1, k) = 2;
-%             case 'moderado'
-%                  Orginal(1, k) = 3;
-%             case 'normal'
-%                  Orginal(1, k) = 4;
-%         end
+        switch Categoria
+            case 'grave'
+                 Orginal(1, k) = 1;
+            case 'leve'
+                 Orginal(1, k) = 2;
+            case 'moderado'
+                 Orginal(1, k) = 3;
+            case 'normal'
+                 Orginal(1, k) = 4;
+        end
         
 %         switch Categoria
 %             case 'Doente'
@@ -47,12 +47,12 @@ for j = 1:folds
 %                  Orginal(1, k) = 2;
 %         end
 
-        switch Categoria
-            case 'leve'
-                 Orginal(1, k) = 1;
-            case 'moderado'
-                 Orginal(1, k) = 2;
-        end
+%         switch Categoria
+%             case 'leve'
+%                  Orginal(1, k) = 1;
+%             case 'moderado'
+%                  Orginal(1, k) = 2;
+%         end
 
 
 
